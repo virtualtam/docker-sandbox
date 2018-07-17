@@ -1,0 +1,32 @@
+---
+version: '3'
+
+networks:
+  cache:
+  proxy:
+
+volumes:
+  openresty-data:
+
+services:
+  shaarli:
+    image: shaarli/shaarli:master
+    networks:
+      - proxy
+
+  redis:
+    image: redis:4-alpine
+    networks:
+      - cache
+    ports:
+      - 6379:6379
+
+  openresty:
+    image: openresty/openresty:stretch
+    networks:
+      - cache
+      - proxy
+    ports:
+      - 11080:80
+    volumes:
+      - openresty-data:/etc/nginx/conf.d
