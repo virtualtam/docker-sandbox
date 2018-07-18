@@ -102,6 +102,9 @@ Cache control and headers:
 - https://stackoverflow.com/questions/19002567/nginx-add-header-and-cache-control
 - https://serverfault.com/questions/772507/set-expires-and-cache-control-headers-on-nginx
 - https://www.photographerstechsupport.com/tutorials/hosting-wordpress-on-aws-tutorial-part-4-wordpress-website-optimization/#ccheaders
+- https://serverfault.com/questions/609350/update-cache-control-max-age-when-srcache-returns-response-from-cache
+- https://groups.google.com/forum/#!topic/openresty-en/N-MqS1zLMiQ
+- https://github.com/openresty/headers-more-nginx-module
 
 Caching modules:
 
@@ -111,15 +114,20 @@ Caching modules:
 - https://www.nginx.com/resources/wiki/modules/redis/?highlight=redis
 - https://github.com/openresty/redis2-nginx-module
 
-Headers:
-
-- https://github.com/openresty/headers-more-nginx-module
-
 Proxying:
 
 - https://docs.nginx.com/nginx/admin-guide/web-server/reverse-proxy/
 - https://www.liaohuqiu.net/posts/nginx-proxy-pass/
 - https://stackoverflow.com/questions/12847771/configure-nginx-with-proxy-pass
+
+Configuration:
+
+- https://stackoverflow.com/questions/5238377/nginx-location-priority
+
+Debugging and logging:
+
+- https://nginx.org/en/docs/debugging_log.html
+- http://www.nginx-discovery.com/2011/04/day-46-how-to-debug-location-in-nginx.html
 
 Træfik
 ~~~~~~
