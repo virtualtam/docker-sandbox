@@ -3,16 +3,22 @@ version: '3'
 
 networks:
   cache:
+  load-balancer:
   proxy:
 
 volumes:
   openresty-data:
+  shaarli-cache:
+  shaarli-data:
 
 services:
   shaarli:
     image: shaarli/shaarli:master
     networks:
       - proxy
+    volumes:
+      - shaarli-cache:/var/www/shaarli/cache
+      - shaarli-data:/var/www/shaarli/data
 
   redis:
     image: redis:4-alpine
@@ -22,11 +28,40 @@ services:
       - 6379:6379
 
   openresty:
-    image: openresty/openresty:stretch
+    build: ./openresty
+    environment:
+      TCP_PORTS: 80
     networks:
       - cache
+      - load-balancer
       - proxy
-    ports:
-      - 11080:80
     volumes:
       - openresty-data:/etc/nginx/conf.d
+    labels:
+      traefik.enable: true
+      traefik.domain: "shaarli-openresty.docker"
+      traefik.backend: openresty
+      traefik.frontend.rule: "Host:shaarli-openresty.docker"
+      traefik.port: 80
+      traefik.docker.network: openresty-srcache-redis_load-balancer
+      traefik.backend.loadbalancer.method: brr
+      traefik.backend.loadbalancer.stickiness: true
+
+  traefik:
+    image: traefik:1.7-alpine
+    command:
+      - "--defaultentrypoints=http"
+      - "--entrypoints=Name:http Address::80"
+      - "--retry"
+      - "--docker"
+      - "--docker.domain=docker.localhost"
+      - "--docker.exposedbydefault=false"
+      - "--docker.watch=true"
+      - "--web"
+    networks:
+      - load-balancer
+    ports:
+      - 11080:80
+      - 11081:8080
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
