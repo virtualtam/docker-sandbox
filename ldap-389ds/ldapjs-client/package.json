@@ -1,0 +1,19 @@
+{
+  "name": "ldapjs-client",
+  "version": "1.0.0",
+  "description": "Example client using ldapjs",
+  "main": "client.js",
+  "author": "VirtualTam",
+  "license": "MIT",
+  "dependencies": {
+    "commander": "^2.15.1",
+    "ldapjs": "^1.0.2"
+  },
+  "scripts": {
+    "lint:js": "eslint .",
+    "ldap-search": "node client.js"
+  },
+  "devDependencies": {
+    "eslint": "^4.19.1"
+  }
+}
