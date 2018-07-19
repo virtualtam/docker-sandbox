@@ -1,0 +1,7 @@
+---
+version: '3'
+services:
+  ldap:
+    build: ./389ds
+    ports:
+      - 389:389
