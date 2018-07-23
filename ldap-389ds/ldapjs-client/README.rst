@@ -4,9 +4,9 @@ ldapjs example
 Resources
 ---------
 
-- [ldapjs](http://ldapjs.org)
-- [Client API](http://ldapjs.org/client.html)
-- [ldapjs: A reprise of LDAP](https://nodejs.org/en/blog/uncategorized/ldapjs-a-reprise-of-ldap/)
+- `ldapjs <http://ldapjs.org>`_
+- `Client API <http://ldapjs.org/client.html`_
+- `ldapjs: A reprise of LDAP <https://nodejs.org/en/blog/uncategorized/ldapjs-a-reprise-of-ldap/`_
 
 Client usage
 ------------
