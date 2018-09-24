@@ -1,0 +1,74 @@
+---
+version: '3'
+
+networks:
+  ripley:
+
+volumes:
+  grafana-data:
+  prometheus-data:
+
+services:
+  grafana:
+    image: grafana/grafana:5.2.4
+    depends_on:
+      - prometheus
+    networks:
+      - ripley
+    ports:
+      - 13000:3000
+    volumes:
+      - ./grafana/datasources.yml:/etc/grafana/provisioning/datasources/all.yml:ro
+      - grafana-data:/var/lib/grafana
+
+  prometheus:
+    image: prom/prometheus:v2.4.3
+    build: ./prometheus
+    networks:
+      - ripley
+    ports:
+      - 19090:9090
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./prometheus/prometheus.rules.yml:/etc/prometheus/prometheus.rules.yml:ro
+      - prometheus-data:/prometheus
+
+  node-exporter:
+    image: prom/node-exporter:v0.16.0
+    networks:
+      ripley:
+    pid: 'host'
+    ports:
+      - 19100:9100
+    cap_add:
+      - SYS_TIME
+    volumes:
+      - "/proc:/host/proc:ro,rslave"
+      - "/sys:/host/sys:ro,rslave"
+    command:
+      - '--path.procfs=/host/proc'
+      - '--path.sysfs=/host/sys'
+
+  random-one:
+    image: local/go-random
+    build: ./go-random
+    environment:
+      LISTEN_PORT: 8081
+    networks:
+      - ripley
+
+  random-two:
+    image: local/go-random
+    build: ./go-random
+    environment:
+      LISTEN_PORT: 8082
+    networks:
+      - ripley
+
+  random-three:
+    image: local/go-random
+    build: ./go-random
+    environment:
+      LISTEN_PORT: 8083
+    networks:
+      - ripley
