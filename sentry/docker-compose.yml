@@ -1,0 +1,91 @@
+---
+version: "3"
+
+networks:
+  sentry:
+
+volumes:
+  postgres-data:
+  sentry-files:
+
+services:
+  memcached:
+    image: memcached
+    networks:
+      sentry:
+
+  postgres:
+    image: postgres:11
+    environment:
+      POSTGRES_DB: "${SENTRY_DB_NAME}"
+      POSTGRES_USER: "${SENTRY_DB_NAME}"
+      POSTGRES_PASSWORD: "${SENTRY_DB_PASSWORD}"
+    networks:
+      sentry:
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+  redis:
+    image: redis
+    networks:
+      sentry:
+
+  sentry:
+    image: "sentry:${SENTRY_VERSION}"
+    depends_on:
+      - memcached
+      - postgres
+      - redis
+      - sentry-cron
+      - sentry-worker
+    environment:
+      SENTRY_DB_NAME: "${SENTRY_DB_NAME}"
+      SENTRY_DB_USER: "${SENTRY_DB_USER}"
+      SENTRY_DB_PASSWORD: "${SENTRY_DB_PASSWORD}"
+      SENTRY_POSTGRES_HOST: postgres
+      SENTRY_MEMCACHED_HOST: memcached
+      SENTRY_REDIS_HOST: redis
+      SENTRY_SECRET_KEY: "${SENTRY_SECRET_KEY}"
+    networks:
+      sentry:
+    ports:
+      - 9000:9000
+      - 9001:9001
+    volumes:
+      - sentry-files:/var/lib/sentry/files
+
+  sentry-cron:
+    image: "sentry:${SENTRY_VERSION}"
+    command: "sentry run cron"
+    depends_on:
+      - memcached
+      - postgres
+      - redis
+    environment:
+      SENTRY_DB_NAME: "${SENTRY_DB_NAME}"
+      SENTRY_DB_USER: "${SENTRY_DB_USER}"
+      SENTRY_DB_PASSWORD: "${SENTRY_DB_PASSWORD}"
+      SENTRY_POSTGRES_HOST: postgres
+      SENTRY_MEMCACHED_HOST: memcached
+      SENTRY_REDIS_HOST: redis
+      SENTRY_SECRET_KEY: "${SENTRY_SECRET_KEY}"
+    networks:
+      sentry:
+
+  sentry-worker:
+    image: "sentry:${SENTRY_VERSION}"
+    command: "sentry run worker"
+    depends_on:
+      - memcached
+      - postgres
+      - redis
+    environment:
+      SENTRY_DB_NAME: "${SENTRY_DB_NAME}"
+      SENTRY_DB_USER: "${SENTRY_DB_USER}"
+      SENTRY_DB_PASSWORD: "${SENTRY_DB_PASSWORD}"
+      SENTRY_POSTGRES_HOST: postgres
+      SENTRY_MEMCACHED_HOST: memcached
+      SENTRY_REDIS_HOST: redis
+      SENTRY_SECRET_KEY: "${SENTRY_SECRET_KEY}"
+    networks:
+      sentry:
