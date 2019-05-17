@@ -1,0 +1,20 @@
+---
+version: '3'
+
+volumes:
+  minetest-data:
+  minetest-games:
+  minetest-mods:
+  minetest-worlds:
+
+services:
+  minetest:
+    image: minetest-server
+    build: ./minetest
+    ports:
+      - 30000:30000/udp
+    volumes:
+      - minetest-data:/minetest
+      - minetest-games:/minetest/games
+      - minetest-mods:/minetest/mods
+      - minetest-worlds:/minetest/worlds
