@@ -6,7 +6,7 @@
   "author": "VirtualTam",
   "license": "MIT",
   "dependencies": {
-    "commander": "^2.15.1",
+    "commander": "^2.20.0",
     "ldapjs": "^1.0.2"
   },
   "scripts": {
@@ -14,6 +14,6 @@
     "ldap-search": "node client.js"
   },
   "devDependencies": {
-    "eslint": "^4.19.1"
+    "eslint": "^5.16.0"
   }
 }
