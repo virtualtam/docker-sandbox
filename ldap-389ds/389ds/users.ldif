@@ -15,7 +15,7 @@ objectClass: organizationalPerson
 objectClass: inetorgperson
 sn: Doe
 cn:: Sm9obiBEb2U=
-userPassword:: password1234
+userPassword: password1234
 creatorsName: uid=admin,ou=administrators,ou=topologymanagement,o=netscaperoot
 modifiersName: uid=jdoe,ou=people,dc=domain,dc=tld
 createTimestamp: 20180531080501Z
@@ -33,7 +33,7 @@ objectClass: organizationalPerson
 objectClass: inetorgperson
 sn: Smith
 cn:: Sm9obiBTbWl0aA==
-userPassword:: password7895
+userPassword: password7895
 creatorsName: uid=admin,ou=administrators,ou=topologymanagement,o=netscaperoot
 modifiersName: uid=jsmith,ou=people,dc=domain.tld
 createTimestamp: 20180531080501Z
