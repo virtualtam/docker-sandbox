@@ -1,9 +1,59 @@
 ---
 version: "3"
 
+networks:
+  ripley:
+  rabbitmq:
+
+volumes:
+  grafana-data:
+  prometheus-data:
+
 services:
+  grafana:
+    image: grafana/grafana:6.2.5
+    depends_on:
+      - prometheus
+    networks:
+      - ripley
+    ports:
+      - 13000:3000
+    volumes:
+      - ./grafana/datasources.yml:/etc/grafana/provisioning/datasources/all.yml:ro
+      - grafana-data:/var/lib/grafana
+
+  node-exporter:
+    image: prom/node-exporter:v0.18.1
+    networks:
+      ripley:
+    pid: 'host'
+    ports:
+      - 19100:9100
+    cap_add:
+      - SYS_TIME
+    volumes:
+      - "/proc:/host/proc:ro,rslave"
+      - "/sys:/host/sys:ro,rslave"
+    command:
+      - '--path.procfs=/host/proc'
+      - '--path.sysfs=/host/sys'
+
+  prometheus:
+    image: prom/prometheus:v2.11.1
+    networks:
+      - ripley
+    ports:
+      - 19090:9090
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./prometheus/prometheus.rules.yml:/etc/prometheus/prometheus.rules.yml:ro
+      - prometheus-data:/prometheus
+
   rabbitmq:
     build: ./rabbitmq
+    networks:
+      rabbitmq:
+      ripley:
     ports:
       - 5672:5672
       - 15672:15672
