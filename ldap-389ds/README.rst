@@ -4,19 +4,37 @@ LDAP - 389 Directory Service
 Usage
 -----
 
-Build the LDAP image:
+Starting the services
+~~~~~~~~~~~~~~~~~~~~~
+
+Build the custom LDAP image:
 
 ::
 
     $ docker-compose build
+
+
+Pull service images from Docker Hub:
+
+::
+
+    $ docker-compose pull
 
 Create and start the containers:
 
 ::
 
     $ docker-compose up -d
-    Creating network "docker-ldap-389ds_default" with the default driver
-    Creating docker-ldap-389ds_ldap_1 ... done
+
+    Creating network "ldap-389ds_ldap" with the default driver
+    Creating ldap-389ds_ldap_1         ... done
+    Creating ldap-389ds_phpldapadmin_1 ... done
+
+This will start the following services:
+
+- a 389 Directory Service LDAP directory with pre-configured users (see LDIF
+  files);
+- a phpLDAPadmin web-based LDAP browser to manage LDAP data.
 
 Inspect LDAP logs:
 
@@ -24,11 +42,43 @@ Inspect LDAP logs:
 
     $ docker-compose logs -f ldap
 
-Stop and destroy containers:
+
+Cleanup
+~~~~~~~
+
+To stop all services:
 
 ::
 
     $ docker-compose down
+
+Resources
+---------
+
+389 Directory Service
+~~~~~~~~~~~~~~~~~~~~~
+
+Documentation:
+
+- https://directory.fedoraproject.org/index.html
+- https://directory.fedoraproject.org/docs/389ds/howto/quickstart.html
+- https://access.redhat.com/documentation/en-us/Red_Hat_Directory_Server/10/
+- https://access.redhat.com/documentation/en-us/red_hat_directory_server/10/html/deployment_guide/index
+- https://access.redhat.com/documentation/en-us/red_hat_directory_server/10/html/installation_guide/index
+- https://access.redhat.com/documentation/en-us/red_hat_directory_server/10/html/administration_guide/index
+
+phpLDAPadmin
+~~~~~~~~~~~~
+
+Documentation:
+
+- http://phpldapadmin.sourceforge.net/wiki/index.php/Main_Page
+- http://phpldapadmin.sourceforge.net/wiki/index.php/Config.php
+- http://phpldapadmin.sourceforge.net/function-ref/1.2/
+
+Docker image:
+
+- https://github.com/osixia/docker-phpLDAPadmin
 
 Testing
 -------

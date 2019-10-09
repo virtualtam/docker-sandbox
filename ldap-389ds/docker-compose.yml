@@ -1,7 +1,23 @@
 ---
 version: '3'
+
+networks:
+  ldap:
+
 services:
   ldap:
     build: ./389ds
+    networks:
+      ldap:
     ports:
       - 389:389
+
+  phpldapadmin:
+    image: osixia/phpldapadmin:0.9.0
+    environment:
+      PHPLDAPADMIN_HTTPS: "false"
+      PHPLDAPADMIN_LDAP_HOSTS: ldap
+    networks:
+      ldap:
+    ports:
+      - 14080:80
