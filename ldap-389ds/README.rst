@@ -27,14 +27,17 @@ Create and start the containers:
     $ docker-compose up -d
 
     Creating network "ldap-389ds_ldap" with the default driver
-    Creating ldap-389ds_ldap_1         ... done
-    Creating ldap-389ds_phpldapadmin_1 ... done
+    Creating ldap-389ds_ldap_1                  ... done
+    Creating ldap-389ds_phpldapadmin_1          ... done
+    Creating ldap-389ds_self-service-password_1 ... done
+
 
 This will start the following services:
 
 - a 389 Directory Service LDAP directory with pre-configured users (see LDIF
   files);
-- a phpLDAPadmin web-based LDAP browser to manage LDAP data.
+- a phpLDAPadmin web-based LDAP browser to manage LDAP data,
+- a Self-Service Password (SSP) web service for users to reset their password.
 
 Inspect LDAP logs:
 
@@ -79,6 +82,19 @@ Documentation:
 Docker image:
 
 - https://github.com/osixia/docker-phpLDAPadmin
+
+Self-Service Password
+~~~~~~~~~~~~~~~~~~~~~
+
+Documentation:
+
+- https://ltb-project.org/documentation/self-service-password/latest/start
+- https://ltb-project.org/documentation/self-service-password/latest/config_general
+- https://ltb-project.org/documentation/self-service-password/latest/config_ldap
+
+Docker image:
+
+- https://github.com/tiredofit/docker-self-service-password
 
 Testing
 -------

@@ -21,3 +21,32 @@ services:
       ldap:
     ports:
       - 14080:80
+
+  self-service-password:
+    image: tiredofit/self-service-password:3.1
+    environment:
+      LDAP_SERVER: "ldap://ldap:389"
+      LDAP_BINDDN: "cn=Directory Manager"
+      LDAP_BINDPASS: "password"
+
+      LDAP_BASE_SEARCH: "ou=People,dc=domain,dc=tld"
+      LDAP_LOGIN_ATTRIBUTE: uid
+      LDAP_FULLNAME_ATTRIBUTE: cn
+
+      PASSWORD_HASH: auto
+      PASSWORD_MIN_LENGTH: 8
+      PASSWORD_MAX_LENGTH: 30
+      PASSWORD_MIN_LOWERCASE: 1
+      PASSWORD_MIN_UPPERCASE: 1
+      PASSWORD_MIN_DIGIT: 1
+      PASSWORD_MIN_SPECIAL: 1
+      PASSWORD_SHOW_POLICY: onerror
+      QUESTIONS_ENABLED: "false"
+
+      SECRETEKEY: ohnoescleartextsecret
+
+      WHO_CAN_CHANGE_PASSWORD: user
+    networks:
+      ldap:
+    ports:
+      - 14081:80
