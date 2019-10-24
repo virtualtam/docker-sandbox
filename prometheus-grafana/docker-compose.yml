@@ -19,11 +19,12 @@ services:
       - 13000:3000
     volumes:
       - ./grafana/datasources.yml:/etc/grafana/provisioning/datasources/all.yml:ro
+      - ./grafana/grafana-dashboards.yml:/etc/grafana/provisioning/dashboards/all.yml
+      - ./grafana/dashboards:/opt/dashboards
       - grafana-data:/var/lib/grafana
 
   prometheus:
     image: prom/prometheus:v2.13.1
-    build: ./prometheus
     networks:
       - ripley
     ports:
