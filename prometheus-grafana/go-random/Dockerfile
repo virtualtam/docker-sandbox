@@ -1,4 +1,4 @@
-FROM golang:1.11-alpine
+FROM golang:1.13-alpine
 
 ENV LISTEN_PORT 8080
 ENV CGO_ENABLED 0
