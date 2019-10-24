@@ -10,3 +10,11 @@ datasources:
     is_default: true
     version: 1
     editable: true
+
+datasources:
+  - name: 'Loki'
+    type: 'loki'
+    access: 'proxy'
+    url: 'http://loki:3100'
+    jsonData:
+      maxLines: 1000

@@ -1,5 +1,5 @@
-Prometheus TimeSeries DataBase (TSDB) and Grafana Dashboards
-============================================================
+Prometheus / Loki / Grafana Monitoring
+======================================
 
 Usage
 -----
@@ -7,7 +7,7 @@ Usage
 Starting the services
 ~~~~~~~~~~~~~~~~~~~~~
 
-Build the custom `random`` image and pull service images from Docker Hub:
+Build the custom ``random`` image and pull service images from Docker Hub:
 
 ::
 
@@ -21,21 +21,26 @@ Create volumes and networks, start services:
     $ docker-compose up -d
 
     Creating network "prometheus-grafana_ripley" with the default driver
+    Creating network "prometheus-grafana_thor" with the default driver
     Creating prometheus-grafana_random-three_1  ... done
     Creating prometheus-grafana_random-one_1    ... done
     Creating prometheus-grafana_prometheus_1    ... done
     Creating prometheus-grafana_node-exporter_1 ... done
     Creating prometheus-grafana_random-two_1    ... done
+    Creating prometheus-grafana_loki_1          ... done
     Creating prometheus-grafana_grafana_1       ... done
+    Creating prometheus-grafana_promtail_1      ... done
 
 
 This will start the following services:
 
-- a Prometheus time series database to gather and store metrics;
-- a Grafana server to create dashboards and visualize data;
+- three instances of the ``random`` example service that generates and exposes
+  random metrics;
 - a Node Exporter collection engine to gather and expose system metrics;
-- threeinstances of the ``random`` example service that generates and exposes
-  random metrics.
+- a Prometheus time series database to gather and store metrics;
+- a Promtail log collection service to gather log entries from system logs;
+- a Loki log aggregation service providing label-based indexes;
+- a Grafana server to create dashboards and visualize data.
 
 Cleanup
 ~~~~~~~
@@ -90,6 +95,7 @@ Documentation:
 - http://docs.grafana.org/
 - http://docs.grafana.org/installation/docker/
 - http://docs.grafana.org/guides/getting_started/
+- https://grafana.com/docs/features/datasources/loki/
 - http://docs.grafana.org/features/datasources/prometheus/
 
 Sources:
@@ -126,3 +132,23 @@ Tutorial:
 Sources:
 
 - https://github.com/prometheus/client_golang/blob/master/examples/random/main.go
+
+
+Loki and Promatil
+~~~~~~~~~~~~~~~~~
+
+Docker images:
+
+- https://hub.docker.com/r/grafana/loki/
+- https://hub.docker.com/r/grafana/promtail
+
+Documentation:
+
+- https://github.com/grafana/loki
+- https://github.com/grafana/loki/tree/master/docs
+- https://github.com/grafana/loki/tree/master/docs/overview
+- https://github.com/grafana/loki/blob/master/docs/logql.md
+
+Sources:
+
+- https://github.com/grafana/loki
