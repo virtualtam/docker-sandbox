@@ -1,0 +1,69 @@
+---
+version: "3"
+
+networks:
+  vault: {}
+
+volumes:
+  consul-data: {}
+
+services:
+  consul:
+    image: consul:1.6.3
+    command:
+      - "agent"
+    environment:
+      CONSUL_LOCAL_CONFIG: |
+        {
+          "addresses": {
+            "http": "0.0.0.0"
+          },
+          "ports": {
+            "http": 8500
+          },
+          "bootstrap": true,
+          "bootstrap_expect": 1,
+          "datacenter": "vault",
+          "server": true,
+          "ui": true
+        }
+    networks:
+      vault:
+    ports:
+      - 8500:8500
+    volumes:
+      - consul-data:/consul/data
+
+  vault:
+    image: vault:1.3.2
+    command:
+      - "server"
+    cap_add:
+      - IPC_LOCK
+    environment:
+      VAULT_ADDR: "http://127.0.0.1:8200"
+      VAULT_LOCAL_CONFIG: |
+        {
+          "api_addr": "http://vault:8200",
+          "backend": {
+            "consul": {
+              "address": "http://consul:8500",
+              "path": "vault/"
+            }
+          },
+          "listener": {
+            "tcp": {
+              "address": "0.0.0.0:8200",
+              "tls_disable": "1"
+            }
+          },
+          "default_lease_ttl": "168h",
+          "max_lease_ttl": "720h",
+          "ui": true
+        }
+    depends_on:
+      - consul
+    networks:
+      vault:
+    ports:
+      - 8200:8200

@@ -18,6 +18,8 @@ Messing around with container-centric architectures, networking and scaling :)
 Clusters Made of Sandboxes
 --------------------------
 
+- `Configuration and Secrets Management <./consul-vault/README.rst>`_: Consul,
+  Vault
 - `LDAP <./ldap-389ds/README.rst>`_: 389 Directory Services, phpLDAPadmin,
   Self-Service Password
 - `Minetest <./minetest/README.rst>`_ game server
