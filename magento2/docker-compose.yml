@@ -2,7 +2,8 @@
 version: "3"
 
 networks:
-  magento: {}
+  magento-db: {}
+  magento-http: {}
 
 volumes:
   db-data: {}
@@ -17,7 +18,7 @@ services:
       MYSQL_USER: magento
       MYSQL_PASSWORD: magento
     networks:
-      - magento
+      - magento-db
     volumes:
       - db-data:/var/lib/mysql
 
@@ -41,13 +42,27 @@ services:
       MAGENTO_ADMIN_USERNAME: admin
       MAGENTO_ADMIN_PASSWORD: admin123
     networks:
-      - magento
-    ports:
-      - 9080:80
+      - magento-db
+      - magento-http
+    #ports:
+    #  - 9080:80
     volumes:
       - magento-data:/var/www/html
 
   redis:
     image: redis:5-buster
     networks:
+      - magento-db
+
+  varnish:
+    image: varnish:6.3
+    depends_on:
       - magento
+    networks:
+      - magento-http
+    ports:
+      - 9080:80
+    tmpfs:
+      - /usr/local/var/varnish:exec
+    volumes:
+      - ./varnish/default.vcl:/etc/varnish/default.vcl
