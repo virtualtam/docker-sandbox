@@ -1,0 +1,53 @@
+---
+version: "3"
+
+networks:
+  magento: {}
+
+volumes:
+  db-data: {}
+  magento-data: {}
+
+services:
+  db:
+    image: mariadb:10
+    environment:
+      MYSQL_ROOT_PASSWORD: magento
+      MYSQL_DATABASE: magento
+      MYSQL_USER: magento
+      MYSQL_PASSWORD: magento
+    networks:
+      - magento
+    volumes:
+      - db-data:/var/lib/mysql
+
+  magento:
+    image: alexcheng/magento2:2.2-integrator
+    depends_on:
+      - db
+      - redis
+    environment:
+      MAGENTO_LANGUAGE: fr_FR
+      MAGENTO_TIMEZONE: Europe/Paris
+      MAGENTO_DEFAULT_CURRENCY: EUR
+      MAGENTO_URL: http://magento.docker
+      MAGENTO_BACKEND_FRONTNAME: admin
+      MAGENTO_USE_SECURE: 0
+      MAGENTO_BASE_URL_SECURE: 0
+      MAGENTO_USE_SECURE_ADMIN: 0
+      MAGENTO_ADMIN_FIRSTNAME: Admin
+      MAGENTO_ADMIN_LASTNAME: MyStore
+      MAGENTO_ADMIN_EMAIL: amdin@magento.docker
+      MAGENTO_ADMIN_USERNAME: admin
+      MAGENTO_ADMIN_PASSWORD: admin123
+    networks:
+      - magento
+    ports:
+      - 9080:80
+    volumes:
+      - magento-data:/var/www/html
+
+  redis:
+    image: redis:5-buster
+    networks:
+      - magento
