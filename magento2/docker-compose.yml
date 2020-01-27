@@ -7,6 +7,7 @@ networks:
 
 volumes:
   db-data: {}
+  es-data: {}
   magento-data: {}
 
 services:
@@ -22,32 +23,29 @@ services:
     volumes:
       - db-data:/var/lib/mysql
 
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.5.2
+    environment:
+      discovery.type: single-node
+      ES_JAVA_OPTS: -Xms512m -Xmx512m
+    networks:
+      - magento-db
+    volumes:
+      - es-data:/usr/share/elasticsearch/data
+
   magento:
-    image: alexcheng/magento2:2.2-integrator
+    build: ./magento
     depends_on:
       - db
+      - elasticsearch
       - redis
-    environment:
-      MAGENTO_LANGUAGE: fr_FR
-      MAGENTO_TIMEZONE: Europe/Paris
-      MAGENTO_DEFAULT_CURRENCY: EUR
-      MAGENTO_URL: http://magento.docker
-      MAGENTO_BACKEND_FRONTNAME: admin
-      MAGENTO_USE_SECURE: 0
-      MAGENTO_BASE_URL_SECURE: 0
-      MAGENTO_USE_SECURE_ADMIN: 0
-      MAGENTO_ADMIN_FIRSTNAME: Admin
-      MAGENTO_ADMIN_LASTNAME: MyStore
-      MAGENTO_ADMIN_EMAIL: amdin@magento.docker
-      MAGENTO_ADMIN_USERNAME: admin
-      MAGENTO_ADMIN_PASSWORD: admin123
     networks:
       - magento-db
       - magento-http
     #ports:
     #  - 9080:80
     volumes:
-      - magento-data:/var/www/html
+      - magento-data:/var/www/magento
 
   redis:
     image: redis:5-buster
@@ -61,7 +59,7 @@ services:
     networks:
       - magento-http
     ports:
-      - 9080:80
+      - 80:80
     tmpfs:
       - /usr/local/var/varnish:exec
     volumes:
