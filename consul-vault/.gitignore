@@ -1,1 +1,9 @@
+.env
 seal.json
+
+terraform/.ash_*
+terraform/.terraform
+terraform/.terraform.d
+terraform/.vault-token
+terraform/terraform.tfstate
+terraform/terraform.tfstate.backup

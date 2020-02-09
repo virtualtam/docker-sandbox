@@ -34,6 +34,17 @@ services:
     volumes:
       - consul-data:/consul/data
 
+  terraform:
+    image: vault-terraform
+    build: ./terraform
+    entrypoint:
+      - "/bin/sh"
+    networks:
+      vault:
+    tty: true
+    volumes:
+      - ./terraform:/home/terraform
+
   vault:
     image: vault:1.3.2
     command:
