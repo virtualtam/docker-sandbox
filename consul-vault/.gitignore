@@ -1,4 +1,6 @@
 .env
+
+postgres_lease.json
 seal.json
 
 terraform/.ash_*
