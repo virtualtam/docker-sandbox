@@ -26,3 +26,4 @@ Clusters Made of Sandboxes
 - `Monitoring <./prometheus-loki-grafana/README.rst>`_: Prometheus, Loki,
   Grafana
 - `Sentry <./sentry/README.rst>`_ error reporting
+- `Tracing <./tracing/README.rst>`_: Jaeger, Apache Cassandra
