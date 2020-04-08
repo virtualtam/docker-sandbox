@@ -11,7 +11,7 @@ volumes:
 
 services:
   grafana:
-    image: grafana/grafana:6.4.3
+    image: grafana/grafana:6.7.2
     depends_on:
       - loki
       - prometheus
@@ -27,7 +27,7 @@ services:
       - grafana-data:/var/lib/grafana
 
   prometheus:
-    image: prom/prometheus:v2.13.1
+    image: prom/prometheus:v2.17.1
     networks:
       - ripley
     ports:
@@ -38,7 +38,7 @@ services:
       - prometheus-data:/prometheus
 
   node-exporter:
-    image: prom/node-exporter:v0.18.0
+    image: prom/node-exporter:v0.18.1
     networks:
       ripley:
     pid: 'host'
@@ -78,13 +78,13 @@ services:
       - ripley
 
   loki:
-    image: grafana/loki:v0.4.0
+    image: grafana/loki:1.4.1
     command: -config.file=/etc/loki/local-config.yaml
     networks:
       - thor
 
   promtail:
-    image: grafana/promtail:v0.4.0
+    image: grafana/promtail:1.4.1
     volumes:
       - '/var/log:/var/log:ro,rslave'
     command: -config.file=/etc/promtail/docker-config.yaml
