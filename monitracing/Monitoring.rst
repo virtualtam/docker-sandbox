@@ -12,13 +12,13 @@ Build the custom ``random`` image and pull service images from Docker Hub:
 ::
 
     $ docker-compose build random-one
-    $ docker-compose pull
+    $ docker-compose pull grafana loki promtail
 
 Create volumes and networks, start services:
 
 ::
 
-    $ docker-compose up -d
+    $ docker-compose up -d grafana loki promtail
 
     Creating network "prometheus-grafana_ripley" with the default driver
     Creating network "prometheus-grafana_thor" with the default driver

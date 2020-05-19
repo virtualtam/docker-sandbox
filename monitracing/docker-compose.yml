@@ -1,0 +1,164 @@
+---
+version: '3'
+
+networks:
+  jaeger: {}
+  prometheus: {}
+  loki: {}
+
+volumes:
+  cassandra-data: {}
+  grafana-data: {}
+  prometheus-data: {}
+
+services:
+  # MONITORING
+  grafana:
+    image: grafana/grafana:7.0.0
+    depends_on:
+      - loki
+      - prometheus
+    networks:
+      - jaeger
+      - prometheus
+      - loki
+    ports:
+      - 13000:3000
+    volumes:
+      - ./grafana/datasources.yml:/etc/grafana/provisioning/datasources/all.yml:ro
+      - ./grafana/grafana-dashboards.yml:/etc/grafana/provisioning/dashboards/all.yml
+      - ./grafana/dashboards:/opt/dashboards
+      - grafana-data:/var/lib/grafana
+
+  prometheus:
+    image: prom/prometheus:v2.18.1
+    depends_on:
+      - node-exporter
+      - random-one
+      - random-two
+      - random-three
+    networks:
+      - prometheus
+    ports:
+      - 19090:9090
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./prometheus/prometheus.rules.yml:/etc/prometheus/prometheus.rules.yml:ro
+      - prometheus-data:/prometheus
+
+  node-exporter:
+    image: prom/node-exporter:v0.18.1
+    networks:
+      - prometheus
+    pid: 'host'
+    ports:
+      - 19100:9100
+    cap_add:
+      - SYS_TIME
+    volumes:
+      - "/proc:/host/proc:ro,rslave"
+      - "/sys:/host/sys:ro,rslave"
+    command:
+      - '--path.procfs=/host/proc'
+      - '--path.sysfs=/host/sys'
+
+  random-one:
+    image: local/go-random
+    build: ./go-random
+    environment:
+      LISTEN_PORT: 8081
+    networks:
+      - prometheus
+
+  random-two:
+    image: local/go-random
+    build: ./go-random
+    environment:
+      LISTEN_PORT: 8082
+    networks:
+      - prometheus
+
+  random-three:
+    image: local/go-random
+    build: ./go-random
+    environment:
+      LISTEN_PORT: 8083
+    networks:
+      - prometheus
+
+  loki:
+    image: grafana/loki:1.4.1
+    command: -config.file=/etc/loki/local-config.yaml
+    networks:
+      - loki
+
+  promtail:
+    image: grafana/promtail:1.4.1
+    volumes:
+      - '/var/log:/var/log:ro,rslave'
+    command: -config.file=/etc/promtail/docker-config.yaml
+    networks:
+      - loki
+
+  # TRACING
+  cassandra:
+    image: cassandra:3.9
+    networks:
+      jaeger: {}
+    volumes:
+      - cassandra-data:/var/lib/cassandra
+
+  hotrod:
+    image: jaegertracing/example-hotrod:1.18
+    command: "all"
+    environment:
+      JAEGER_AGENT_HOST: jaeger-agent
+    networks:
+      jaeger: {}
+    ports:
+      - 8080:8080
+
+  jaeger-cassandra-schema:
+    image: jaegertracing/jaeger-cassandra-schema:1.18
+    depends_on:
+      - cassandra
+    networks:
+      jaeger: {}
+
+  jaeger-agent:
+    image: jaegertracing/jaeger-agent:1.18
+    command: ["--reporter.grpc.host-port=jaeger-collector:14250"]
+    depends_on:
+      - jaeger-collector
+    networks:
+      jaeger: {}
+
+  jaeger-collector:
+    image: jaegertracing/jaeger-collector:1.18
+    command:
+      - "--cassandra.keyspace=jaeger_v1_dc1"
+      - "--cassandra.servers=cassandra"
+    depends_on:
+      - jaeger-cassandra-schema
+    networks:
+      jaeger: {}
+
+  jaeger-query:
+    image: jaegertracing/jaeger-query:1.18
+    command:
+      - "--cassandra.keyspace=jaeger_v1_dc1"
+      - "--cassandra.servers=cassandra"
+    networks:
+      jaeger: {}
+    ports:
+      - 16686:16686
+
+  jaeger-spark-dependencies:
+    image: jaegertracing/spark-dependencies:latest
+    depends_on:
+      - cassandra
+    environment:
+      STORAGE: cassandra
+      CASSANDRA_CONTACT_POINTS: cassandra
+    networks:
+      jaeger: {}

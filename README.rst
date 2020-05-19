@@ -23,7 +23,6 @@ Clusters Made of Sandboxes
 - `Minetest <./minetest/README.rst>`_ game server
 - `OpenResty <./openresty-srcache-redis/README.rst>`_ high-availability web
   server cluster with a shared Redis cache
-- `Monitoring <./prometheus-loki-grafana/README.rst>`_: Prometheus, Loki,
-  Grafana
+- `Monitoring  and Tracing <./monitracing/README.rst>`_: Prometheus, Loki,
+  Grafana, Jaeger, Cassandra
 - `Sentry <./sentry/README.rst>`_ error reporting
-- `Tracing <./tracing/README.rst>`_: Jaeger, Apache Cassandra
