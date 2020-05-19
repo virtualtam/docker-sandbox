@@ -11,7 +11,7 @@ volumes:
 
 services:
   grafana:
-    image: grafana/grafana:6.7.2
+    image: grafana/grafana:7.0.0
     depends_on:
       - loki
       - prometheus
@@ -27,7 +27,7 @@ services:
       - grafana-data:/var/lib/grafana
 
   prometheus:
-    image: prom/prometheus:v2.17.1
+    image: prom/prometheus:v2.18.1
     networks:
       - ripley
     ports:
