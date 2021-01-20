@@ -23,7 +23,7 @@ services:
       - 14080:80
 
   self-service-password:
-    image: tiredofit/self-service-password:3.1
+    image: tiredofit/self-service-password:5.1.2
     environment:
       LDAP_SERVER: "ldap://ldap:389"
       LDAP_BINDDN: "cn=Directory Manager"
