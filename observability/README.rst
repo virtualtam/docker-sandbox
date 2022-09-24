@@ -1,5 +1,5 @@
-Prometheus / Loki / Grafana Monitoring
-======================================
+Observability
+=============
 
 Usage
 -----
@@ -7,21 +7,20 @@ Usage
 Starting the services
 ~~~~~~~~~~~~~~~~~~~~~
 
-Build the custom ``random`` image and pull service images from Docker Hub:
+Build the custom ``random`` image:
 
 ::
 
-    $ docker-compose build random-one
-    $ docker-compose pull grafana loki promtail
+    $ docker compose build random-one
 
 Create volumes and networks, start services:
 
 ::
 
-    $ docker-compose up -d grafana loki promtail
+    $ docker compose up -d
 
-    Creating network "prometheus-grafana_ripley" with the default driver
-    Creating network "prometheus-grafana_thor" with the default driver
+    Creating network "observability_apps" with the default driver
+    Creating network "observability_observability" with the default driver
     Creating prometheus-grafana_random-three_1  ... done
     Creating prometheus-grafana_random-one_1    ... done
     Creating prometheus-grafana_prometheus_1    ... done
@@ -30,17 +29,19 @@ Create volumes and networks, start services:
     Creating prometheus-grafana_loki_1          ... done
     Creating prometheus-grafana_grafana_1       ... done
     Creating prometheus-grafana_promtail_1      ... done
+    Creating prometheus-grafana_tempo_1         ... done
 
 
 This will start the following services:
 
 - three instances of the ``random`` example service that generates and exposes
   random metrics;
-- a Node Exporter collection engine to gather and expose system metrics;
-- a Prometheus time series database to gather and store metrics;
-- a Promtail log collection service to gather log entries from system logs;
-- a Loki log aggregation service providing label-based indexes;
-- a Grafana server to create dashboards and visualize data.
+- Node Exporter collection engine to gather and expose system metrics;
+- Prometheus time series database to gather and store metrics;
+- Promtail log collection service to gather log entries from system logs;
+- Loki log aggregation service providing label-based indexes;
+- Tempo;
+- a Grafana server to create dashboards and visualize data;
 
 Cleanup
 ~~~~~~~
@@ -49,13 +50,13 @@ To stop all services:
 
 ::
 
-    $ docker-compose down
+    $ docker compose down
 
 To stop all services and remove data volumes:
 
 ::
 
-    $ docker-compose down -v
+    $ docker compose down -v
 
 Resources
 ---------
@@ -152,3 +153,10 @@ Documentation:
 Sources:
 
 - https://github.com/grafana/loki
+
+OpenTracing
+~~~~~~~~~~~
+
+- https://github.com/opentracing/specification/
+- https://github.com/opentracing/specification/blob/master/semantic_conventions.md
+

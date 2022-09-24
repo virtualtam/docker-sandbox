@@ -1,0 +1,111 @@
+---
+version: '3'
+
+networks:
+  apps: {}
+  observability: {}
+
+volumes:
+  grafana-data: {}
+  prometheus-data: {}
+  tempo-data: {}
+
+services:
+  grafana:
+    image: grafana/grafana:9.1.2
+    depends_on:
+      - loki
+      - prometheus
+      - tempo
+    networks:
+      - observability
+    ports:
+      - 3000:3000
+    volumes:
+      - ./docker/grafana/provisioning/datasources.yml:/etc/grafana/provisioning/datasources/all.yml:ro
+      - ./docker/grafana/provisioning/dashboards.yml:/etc/grafana/provisioning/dashboards/all.yml:ro
+      - ./docker/grafana/dashboards:/opt/dashboards
+      - grafana-data:/var/lib/grafana
+
+  loki:
+    image: grafana/loki:2.6.1
+    command: -config.file=/etc/loki/local-config.yaml
+    networks:
+      - observability
+    ports:
+      - 3100:3100  # HTTP API
+      - 9096:9096  # gRPC API
+    volumes:
+      - ./docker/loki/local-config.yaml:/etc/loki/local-config.yaml:ro
+
+  node-exporter:
+    image: prom/node-exporter:v1.3.1
+    networks:
+      - observability
+    pid: 'host'
+    ports:
+      - 19100:9100
+    cap_add:
+      - SYS_TIME
+    volumes:
+      - "/proc:/host/proc:ro,rslave"
+      - "/sys:/host/sys:ro,rslave"
+    command:
+      - '--path.procfs=/host/proc'
+      - '--path.sysfs=/host/sys'
+
+  prometheus:
+    image: prom/prometheus:v2.38.0
+    networks:
+      - apps
+      - observability
+    ports:
+      - 9090:9090
+    volumes:
+      - ./docker/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus-data:/prometheus
+
+  promtail:
+    image: grafana/promtail:1.4.1
+    volumes:
+      - '/var/log:/var/log:ro,rslave'
+    command: -config.file=/etc/promtail/docker-config.yaml
+    networks:
+      - observability
+
+  tempo:
+    image: grafana/tempo:1.5.0
+    command: -config.file=/etc/tempo-local.yaml
+    networks:
+      - observability
+    ports:
+      - 3200:3200  # Tempo HTTP API
+      - 4317:4317  # OTEL gRPC API
+      - 4318:4318  # OTEL HTTP API
+    volumes:
+      - ./docker/tempo/tempo-local.yaml:/etc/tempo-local.yaml:ro
+      - tempo-data:/tmp/tempo
+
+  random-one:
+    image: local/go-random
+    build: ./go-random
+    environment:
+      LISTEN_PORT: 8081
+    networks:
+      - apps
+
+  random-two:
+    image: local/go-random
+    build: ./go-random
+    environment:
+      LISTEN_PORT: 8082
+    networks:
+      - apps
+
+  random-three:
+    image: local/go-random
+    build: ./go-random
+    environment:
+      LISTEN_PORT: 8083
+    networks:
+      - apps
