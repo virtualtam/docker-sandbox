@@ -1,0 +1,18 @@
+---
+volumes:
+  rsyslog-dev: {}
+  var-log: {}
+
+services:
+  app:
+    build: ./app
+    depends_on:
+      - rsyslog
+    volumes:
+      - rsyslog-dev:/run/rsyslog/dev
+
+  rsyslog:
+    build: ./rsyslog
+    volumes:
+      - rsyslog-dev:/run/rsyslog/dev
+      - var-log:/var/log
