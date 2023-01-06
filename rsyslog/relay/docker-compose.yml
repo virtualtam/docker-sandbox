@@ -1,0 +1,18 @@
+---
+networks:
+  rsyslog: {}
+
+services:
+  app:
+    build: ./app
+    depends_on:
+      - rsyslog
+    networks:
+      - rsyslog
+
+  rsyslog:
+    build: ./rsyslog
+    networks:
+      - rsyslog
+    ports:
+      - 10514:514/tcp
