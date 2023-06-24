@@ -1,0 +1,41 @@
+version: '3'
+
+networks:
+  quickwit: {}
+
+volumes:
+  minio-data: {}
+  quickwit-data: {}
+
+services:
+  minio:
+    image: quay.io/minio/minio
+    command: server /data --console-address ":9090"
+    networks:
+      quickwit:
+        aliases:
+          - minio.local
+    ports:
+      - 9000:9000
+      - 9090:9090
+    volumes:
+      - minio-data:/data
+    environment:
+      MINIO_ROOT_USER: quickwit-admin
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+
+  quickwit:
+    image: quickwit/quickwit:0.6.1
+    command: run
+    networks:
+      - quickwit
+    ports:
+      - 7280:7280
+    volumes:
+      - quickwit-data:/quickwit/qwdata
+      - ./quickwit:/etc/quickwit:ro
+    environment:
+      AWS_REGION: local
+      AWS_ACCESS_KEY_ID: ${MINIO_AWS_ACCESS_KEY_ID}
+      AWS_SECRET_ACCESS_KEY: ${MINIO_AWS_SECRET_ACCESS_KEY}
+      QW_CONFIG: /etc/quickwit/quickwit.yaml

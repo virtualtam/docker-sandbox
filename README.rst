@@ -26,4 +26,5 @@ Clusters Made of Sandboxes
 - `OpenResty <./openresty-srcache-redis/README.rst>`_ high-availability web
   server cluster with a shared Redis cache
 - `Observability <./observability/README.rst>`_: Prometheus, Loki, Tempo, Grafana
+- `Quickwit <./quickwit/README.rst>`_: Quickwit search engine with MinIO storage
 - `Sentry <./sentry/README.rst>`_ error reporting
