@@ -1,8 +1,7 @@
 version: 0.6
 
-# TODO: add PostgreSQL for metastore
-#metastore_uri: s3://quickwit/indexes
 default_index_root_uri: s3://quickwit/indexes
+metastore_uri: postgres://quickwit:dbpass@postgres:5432/quickwit
 
 storage:
   s3:
