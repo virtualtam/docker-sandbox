@@ -25,3 +25,4 @@ Messing around with container-centric architectures, networking and scaling :)
 - [Observability](./observability/README.rst): Prometheus, Loki, Tempo, Grafana
 - [Quickwit](./quickwit/README.md): Quickwit search engine with MinIO storage
 - [Sentry](./sentry/README.rst) error reporting
+- [Zitadel SSO](./sso/README.md)

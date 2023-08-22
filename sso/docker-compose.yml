@@ -1,0 +1,40 @@
+---
+version: "3"
+
+networks:
+  sso: {}
+
+volumes:
+  cockroachdb-data: {}
+
+services:
+  crdb:
+    image: "cockroachdb/cockroach:v23.1.11"
+    command: 'start-single-node --insecure'
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health?ready=1"]
+      interval: '10s'
+      timeout: '30s'
+      retries: 5
+      start_period: '20s'
+    networks:
+      - sso
+    ports:
+      - '9090:8080'
+      - '26257:26257'
+    volumes:
+      - cockroachdb-data:/cockroach/cockroach-data
+
+  zitadel:
+    image: "ghcr.io/zitadel/zitadel:v2.37.2"
+    command: 'start-from-init --masterkey "MasterkeyNeedsToHave32Characters" --tlsMode disabled'
+    environment:
+      ZITADEL_DATABASE_COCKROACH_HOST: crdb
+      ZITADEL_EXTERNALSECURE: "false"
+    depends_on:
+      crdb:
+        condition: service_healthy
+    networks:
+      - sso
+    ports:
+      - "8080:8080"
