@@ -2,12 +2,49 @@
 version: "3"
 
 networks:
+  gitea: {}
   sso: {}
 
 volumes:
   cockroachdb-data: {}
+  gitea-data: {}
+  postgresql-data: {}
 
 services:
+  # SSO client applications
+  gitea:
+    image: gitea/gitea:1.20.5
+    depends_on:
+      - postgresql
+    environment:
+      GITEA__database__DB_TYPE: postgres
+      GITEA__database__HOST: "postgresql:5432"
+      GITEA__database__NAME: gitea
+      GITEA__database__USER: gitea
+      GITEA__database__PASSWD: gitea
+    networks:
+      - gitea
+      - sso
+    ports:
+      - 3000:3000
+      - 3022:22
+    volumes:
+      - gitea-data:/data
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+
+  postgresql:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: gitea
+      POSTGRES_PASSWORD: gitea
+      POSTGRES_DB: gitea
+    networks:
+      - gitea
+    volumes:
+      - postgresql-data:/var/lib/postgresql/data
+
+  # SSO services
   crdb:
     image: "cockroachdb/cockroach:v23.1.11"
     command: 'start-single-node --insecure'
@@ -30,11 +67,14 @@ services:
     command: 'start-from-init --masterkey "MasterkeyNeedsToHave32Characters" --tlsMode disabled'
     environment:
       ZITADEL_DATABASE_COCKROACH_HOST: crdb
+      ZITADEL_EXTERNALDOMAIN: "zitadel.docker"
       ZITADEL_EXTERNALSECURE: "false"
     depends_on:
       crdb:
         condition: service_healthy
     networks:
-      - sso
+      sso:
+        aliases:
+          - zitadel.docker
     ports:
       - "8080:8080"
