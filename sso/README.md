@@ -57,7 +57,7 @@ Login to Zitadel:
 
 1. Go to `http://zitadel.docker:8080/ui/login/`
 2. Login as the default administrator account:
-    1. Loginname: `zitadel-admin@zitadel.localhost`
+    1. Loginname: `zitadel-admin@zitadel.zitadel.docker`
     2. Password: `Password1!`
 3. You will be asked to update the administrator user's password
 
@@ -82,6 +82,45 @@ Access the Gitea first-time setup form:
 
 1. Go to `http://gitea.docker:3000`
 2. Expand the `Administrator Account`
+    1. Configure the initial administrator account
+3. Validate the configuration
+4. Add a new authentication source: `http://gitea.docker:3000/admin/auths/new`
+    1. Type: OAuth2
+    2. Name: `zitadel`
+    3. Oauth2 Provider: `OpenID Connect`
+    4. Client ID & Client Secret: paste the credentials generated in Zitadel (step 2.10)
+    5. OpenID Connect Auto Discovery URL: `http://zitadel.docker:8080/.well-known/openid-configuration`
+    6. Save authentication source configuration
+
+#### Create a user in Zitadel for usage in Gitea
+1. Go to `http://zitadel.docker:8080/ui/console/users/create`
+2. Fill user information, e.g.:
+    1. Email: `jane.doe@zitadel.docker`
+    2. User Name: `janedoe`
+    3. Given Name: `Jane`
+    4. Family Name: `Doe`
+    5. Email Verified: yes
+    6. Set Initial Password (this will need to be updated at first login)
+    7. Create
+3. In the `Authorizations` section for the new user:
+    1. Click `New`
+    2. Select the `DevTools` project
+    3. Continue
+    4. (Leave the `Roles` section empty for now)
+    5. Save
+
+#### Login to Gitea
+1. Open a new private window or another browser (as we are already logged as the Zitadel admin)
+2. Open `http://gitea.docker:3000/user/login`
+3. Select `Sign in with zitadel`
+    1. Login name: `jane.doe@zitadel.docker`
+    2. Password: the initial password set for this user
+4. Skip two-factor setup
+5. Change user password
+6. Next
+7. Complete Gitea account creation
+    1. Username: `janedoe`
+    2. Email: `jane.doe@zitadel.docker`
 
 ### SSO option 2: Infrastructure-as-code with Terraform
 TODO :)
@@ -99,12 +138,6 @@ TODO :)
 - [Zitadel Production Checklist](https://zitadel.com/docs/self-hosting/manage/productionchecklist)
 - [Zitadel Terraform Provider](https://zitadel.com/docs/guides/manage/terraform/basics)
 - [Update and Scale Zitadel](https://zitadel.com/docs/self-hosting/manage/updating_scaling)
-
-### CockroachDB
-- [Cockroach Labs](https://www.cockroachlabs.com/)
-- [cockroachdb/cockroach](https://github.com/cockroachdb/cockroach)
-- [Deploy a Local Cluster in Docker (Insecure)](https://www.cockroachlabs.com/docs/v23.1/start-a-local-cluster-in-docker-linux)
-- [CockroachDB Production Checklist](https://www.cockroachlabs.com/docs/stable/recommended-production-settings)
 
 ### Gitea
 - [Installation with Docker](https://docs.gitea.com/installation/install-with-docker)
