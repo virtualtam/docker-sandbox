@@ -11,7 +11,7 @@ volumes:
 services:
   # SSO client applications
   gitea:
-    image: gitea/gitea:1.21
+    image: gitea/gitea:1.21-rootless
     depends_on:
       gitea-postgresql:
         condition: service_healthy
@@ -32,7 +32,7 @@ services:
       - 3000:3000
       - 3022:22
     volumes:
-      - gitea-data:/data
+      - gitea-data:/var/lib/gitea
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
 
