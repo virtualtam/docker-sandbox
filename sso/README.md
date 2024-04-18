@@ -125,6 +125,25 @@ Access the Gitea first-time setup form:
 ### SSO option 2: Infrastructure-as-code with Terraform
 TODO :)
 
+#### Gitea configuration
+Run the Gitea first-time setup form:
+
+1. Go to `http://gitea.docker:3000`
+2. Validate the configuration
+
+
+Create the `gitadmin` user:
+
+```shell
+$ make gitea-create-admin
+```
+
+Update Gitea configuration and restart the service:
+
+```shell
+$ make gitea-config
+```
+
 
 ## Resources
 ### Zitadel

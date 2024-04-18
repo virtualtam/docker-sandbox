@@ -19,7 +19,6 @@ services:
       # These variables are only used for first-time setup
       # Further modifications should be made to /data/gitea/conf/app.ini
       APP_NAME: "Gitadel"
-      DISABLE_REGISTRATION: "true"
       GITEA__database__DB_TYPE: postgres
       GITEA__database__HOST: "gitea-postgresql:5432"
       GITEA__database__NAME: gitea
