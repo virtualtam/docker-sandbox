@@ -1,9 +1,9 @@
 # Zitadel SSO
-## Overview
+## 1. Overview
 This Docker Compose configuration will run:
 
 - a Zitadel Single Sign-On (SSO) provider
-- a CockroachDB database to store Zitadel configuration
+- a PostgreSQL database to store Zitadel configuration
 
 Zitadel will provide:
 
@@ -16,16 +16,16 @@ Zitadel will provide:
 
 To play with SSO, we will run:
 
-- a Gitea Git server
-- a PostgreSQL database to store Gitea configuration
+- a Gitea forge for Git repositories
+- a PostgreSQL database to store Gitea configuration and data
 
 All services will be run in development mode with:
 
 - high availability disabled
 - TLS encryption disabled
 
-## Configuration
-### `/etc/hosts`
+## 2. Configuration
+### 2.1 `/etc/hosts`
 We will access services using a local fully qualified domain name (FQDN):
 
 - Gitea will be available at `http://gitea.docker:3000` and `ssh git@gitea.docker -p 3022`
@@ -40,19 +40,27 @@ This is required to properly setup:
 Add the following lines to `/etc/hosts`:
 
 ```
-127.0.10.1  gitea.docker
-127.0.10.1  zitadel.docker
+127.0.0.1  gitea.docker
+127.0.0.1  zitadel.docker
 ```
 
-### SSO option 1: Manual configuration
-#### Services
+### 2.2 macOs users
+On macOs, you will need to flush the DNS cache for the changes in `/etc/hosts` to be applied:
+
+```shell
+$ sudo dscacheutil -flushcache
+$ sudo killall -HUP mDNSResponder
+```
+
+## 3. SSO option 1: Manual configuration
+### 3.1 Start Docker services
 Start the services with Docker Compose:
 
 ```shell
 $ docker compose up -d
 ```
 
-#### Zitadel configuration
+### 3.2 Zitadel configuration
 Login to Zitadel:
 
 1. Go to `http://zitadel.docker:8080/ui/login/`
@@ -77,7 +85,7 @@ Create a project and application for Gitea :
     9. `Create`
     10. Note the `ClientId` and `ClientSecret` information (we will use it when configuring Gitea)
 
-#### Gitea configuration
+### 3.3 Gitea configuration
 Access the Gitea first-time setup form:
 
 1. Go to `http://gitea.docker:3000`
@@ -92,7 +100,7 @@ Access the Gitea first-time setup form:
     5. OpenID Connect Auto Discovery URL: `http://zitadel.docker:8080/.well-known/openid-configuration`
     6. Save authentication source configuration
 
-#### Create a user in Zitadel for usage in Gitea
+### 3.4 Create a user in Zitadel for usage in Gitea
 1. Go to `http://zitadel.docker:8080/ui/console/users/create`
 2. Fill user information, e.g.:
     1. Email: `jane.doe@zitadel.docker`
@@ -109,7 +117,7 @@ Access the Gitea first-time setup form:
     4. (Leave the `Roles` section empty for now)
     5. Save
 
-#### Login to Gitea
+### 3.5 Login to Gitea
 1. Open a new private window or another browser (as we are already logged as the Zitadel admin)
 2. Open `http://gitea.docker:3000/user/login`
 3. Select `Sign in with zitadel`
@@ -122,10 +130,10 @@ Access the Gitea first-time setup form:
     1. Username: `janedoe`
     2. Email: `jane.doe@zitadel.docker`
 
-### SSO option 2: Infrastructure-as-code with Terraform
+## 4. SSO option 2: Infrastructure-as-code with Terraform
 TODO :)
 
-#### Gitea configuration
+### 4.2 Gitea configuration
 Run the Gitea first-time setup form:
 
 1. Go to `http://gitea.docker:3000`
@@ -144,9 +152,8 @@ Update Gitea configuration and restart the service:
 $ make gitea-config
 ```
 
-
-## Resources
-### Zitadel
+## 5. Resources
+### 5.1 Zitadel
 - [Zitadel](https://zitadel.com/)
 - [Set up ZITADEL with Docker Compose](https://zitadel.com/docs/self-hosting/deploy/compose)
 - [Run ZITADEL on a (Sub)domain of Your Choice](https://zitadel.com/docs/self-hosting/manage/custom-domain)
@@ -158,13 +165,13 @@ $ make gitea-config
 - [Zitadel Terraform Provider](https://zitadel.com/docs/guides/manage/terraform/basics)
 - [Update and Scale Zitadel](https://zitadel.com/docs/self-hosting/manage/updating_scaling)
 
-### Gitea
+### 5.2 Gitea
 - [Installation with Docker](https://docs.gitea.com/installation/install-with-docker)
 - [Configuration Cheat Sheet](https://docs.gitea.com/administration/config-cheat-sheet)
 - [go-gitea/gitea#4350 - Single Sign-On with OAuth2 provider (Keycloak) is not login single sign-on](https://github.com/go-gitea/gitea/issues/4350)
 - [go-gitea/gitea#10016 - Make use of roles when using OIDC](https://github.com/go-gitea/gitea/issues/10016)
 - [go-gitea/gitea#21376 - Implement PKCE for OpenID Connect](https://github.com/go-gitea/gitea/issues/21376)
 
-### OAuth2
+### 5.3 OAuth2
 - [RFC 6749 - The OAuth 2.0 Authorization Framework](https://datatracker.ietf.org/doc/html/rfc6749)
 - [RFC 7636 - Proof Key for Code Exchange by OAuth Public Clients](https://datatracker.ietf.org/doc/html/rfc7636) (PKCE)
