@@ -1,0 +1,49 @@
+---
+networks:
+  forgejo: {}
+
+volumes:
+  forgejo-data: {}
+  forgejo-postgresql-data: {}
+
+services:
+  forgejo:
+    image: codeberg.org/forgejo/forgejo:9-rootless
+    depends_on:
+      postgresql:
+        condition: service_healthy
+    environment:
+      # These variables are only used for first-time setup
+      # Further modifications should be made to /data/forgejo/conf/app.ini
+      APP_NAME: "Git Forge"
+      FORGEJO__database__DB_TYPE: postgres
+      FORGEJO__database__HOST: "postgresql:5432"
+      FORGEJO__database__NAME: forgejo
+      FORGEJO__database__USER: forgejo
+      FORGEJO__database__PASSWD: forgejo
+    networks:
+      - forgejo
+    ports:
+      - 3000:3000
+      - 2222:2222
+    volumes:
+      - forgejo-data:/var/lib/gitea
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+
+  postgresql:
+    image: postgres:17
+    environment:
+      POSTGRES_USER: forgejo
+      POSTGRES_PASSWORD: forgejo
+      POSTGRES_DB: forgejo
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready", "-d", "forgejo", "-U", "forgejo"]
+      interval: '10s'
+      timeout: '30s'
+      retries: 5
+      start_period: '20s'
+    networks:
+      - forgejo
+    volumes:
+      - forgejo-postgresql-data:/var/lib/postgresql/data
