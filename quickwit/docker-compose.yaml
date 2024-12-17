@@ -35,7 +35,7 @@ services:
       MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
 
   postgres:
-    image: postgres:15
+    image: postgres:17
     environment:
       POSTGRES_DB: quickwit
       POSTGRES_USER: quickwit
@@ -53,7 +53,7 @@ services:
       - postgres-data:/var/lib/postgresql/data
 
   quickwit:
-    image: quickwit/quickwit:0.6.1
+    image: quickwit/quickwit:0.8.2
     command: run
     depends_on:
       minio:

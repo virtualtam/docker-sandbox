@@ -1,4 +1,4 @@
-version: 0.6
+version: 0.7
 
 default_index_root_uri: s3://quickwit/indexes
 metastore_uri: postgres://quickwit:dbpass@postgres:5432/quickwit

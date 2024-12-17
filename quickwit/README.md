@@ -1,17 +1,21 @@
 # Quickwit
+## Overview
+Quickwit is a search an analytics engine, that is suited to indexing application
+logs and traces.
 
-## Set up MinIO
+We will run Quickwit along with:
+
+- PostgreSQL to persist Quickwit index and task configuration
+- MinIO to persist Quickwit index data in a S3-like bucket
+
+## 1. Start and configure MinIO
 
 MinIO provides an object storage API to store files, and is compatible with the
 AWS S3 API.
 
-We will use MinIO to persist Quickwit indexes in a dedicated bucket.
-
-Set up a password for the `quickwit-admin` account:
+Edit `.env` to set up a password for the `quickwit-admin` account:
 
 ```shell
-$ vim .env
-
 MINIO_ROOT_PASSWORD=<your password goes here>
 ```
 
@@ -35,23 +39,22 @@ Configure an access and secret key for programmatic access:
 These keys will be used by Quickwit to store and retrieve indexed data from the
 MinIO bucket.
 
-Set the access and secret keys:
+Edit `.env` to set the access and secret keys:
 
 ```
-$ vim .env
-
 MINIO_AWS_ACCESS_KEY_ID=<access key>
 MINIO_AWS_SECRET_ACCESS_KEY=<secret key>
 ```
 
-## Start Quickwit
+## 2. Start PostgreSQL and Quickwit
 
-Quickwit is a search an analytics engine, that is suited to indexing application
-logs and traces.
+Start Quickwit with:
 
 ```shell
 $ docker compose up -d quickwit
 ```
+
+The Web interface will be available at http://localhost:7280
 
 ## Resources
 ### Quickwit
