@@ -1,0 +1,19 @@
+# Tutorial Datasets
+DATASETS_DIR := "datasets"
+DATASETS_URL := "https://assets.timescale.com/docs/downloads"
+
+# Energy Consumption Dataset
+# https://docs.timescale.com/tutorials/latest/real-time-analytics-energy-consumption/
+ENERGY_CSV_GZ_URL := DATASETS_URL / "metrics.csv.gz"
+ENERGY_CSV_GZ_FILE := DATASETS_DIR / "metrics.csv.gz"
+
+default: download-energy extract-energy
+
+download-energy:
+	curl -L -o {{ENERGY_CSV_GZ_FILE}} {{ENERGY_CSV_GZ_URL}}
+
+extract-energy: download-energy
+	gzip -dk {{ENERGY_CSV_GZ_FILE}}
+
+psql:
+	docker compose exec timescaledb psql -U timescaledb -d timescaledb
