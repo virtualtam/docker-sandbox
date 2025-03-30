@@ -25,4 +25,5 @@ Messing around with container-centric architectures, networking and scaling :)
 - [Observability](./observability/README.rst): Prometheus, Loki, Tempo, Grafana
 - [Quickwit](./quickwit/README.md) search engine with MinIO storage
 - [Sentry](./sentry/README.rst) error reporting
+- [TimescaleDB](./timescaledb/README.md) time-series database
 - [Zitadel SSO](./sso/README.md) OAuth2 and OpenID Connect provider with Gitea as an example application

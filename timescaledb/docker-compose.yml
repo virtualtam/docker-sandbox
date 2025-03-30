@@ -1,0 +1,45 @@
+networks:
+  tsdb: {}
+
+volumes:
+  grafana-data: {}
+  timescaledb-data: {}
+
+services:
+  grafana:
+    image: grafana/grafana:11.6.0
+    depends_on:
+      timescaledb:
+        condition: service_healthy
+    environment:
+      GF_AUTH_ANONYMOUS_ENABLED: "true"
+      GF_AUTH_DISABLE_LOGIN_FORM: "true"
+      GF_AUTH_ANONYMOUS_ORG_ROLE: Admin
+    healthcheck:
+      test: ["CMD-SHELL", "curl --fail --silent http://localhost:3000/api/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - tsdb
+    ports:
+      - 13000:3000
+    volumes:
+      - ./grafana/provisioning/datasources.yml:/etc/grafana/provisioning/datasources/all.yml:ro
+      - grafana-data:/var/lib/grafana
+
+  timescaledb:
+    image: timescale/timescaledb:2.18.1-pg17
+    networks:
+      - tsdb
+    environment:
+      POSTGRES_USER: timescaledb
+      POSTGRES_PASSWORD: timescaledb
+      POSTGRES_DB: timescaledb
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U timescaledb -d timescaledb"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - timescaledb-data:/var/lib/postgresql/data
