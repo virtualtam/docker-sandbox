@@ -1,13 +1,20 @@
+default: extract-energy extract-nyc
+
+psql:
+	docker compose exec timescaledb psql -U timescaledb -d timescaledb
+
 # Tutorial Datasets
 DATASETS_DIR := "datasets"
 DATASETS_URL := "https://assets.timescale.com/docs/downloads"
 
 # Energy Consumption Dataset
 # https://docs.timescale.com/tutorials/latest/real-time-analytics-energy-consumption/
+#
+# Size:
+# - 14M metrics.csv.gz
+# - 90M metrics.csv
 ENERGY_CSV_GZ_URL := DATASETS_URL / "metrics.csv.gz"
 ENERGY_CSV_GZ_FILE := DATASETS_DIR / "metrics.csv.gz"
-
-default: download-energy extract-energy
 
 download-energy:
 	curl -L -o {{ENERGY_CSV_GZ_FILE}} {{ENERGY_CSV_GZ_URL}}
@@ -15,5 +22,19 @@ download-energy:
 extract-energy: download-energy
 	gzip -dk {{ENERGY_CSV_GZ_FILE}}
 
-psql:
-	docker compose exec timescaledb psql -U timescaledb -d timescaledb
+# New York Yellow Cab dataset
+# https://docs.timescale.com/tutorials/latest/real-time-analytics-transport/
+#
+# Size:
+# - 404M nyc_data.tar.gz
+# - 1.5K nyc_data.sql
+# - 1.1K nyc_data_contagg.sql
+# - 1.6G nyc_data_rides.csv
+NYC_TAR_GZ_URL := DATASETS_URL / "nyc_data.tar.gz"
+NYC_TAR_GZ_FILE := DATASETS_DIR / "nyc_data.tar.gz"
+
+download-nyc:
+    curl -L -o {{NYC_TAR_GZ_FILE}} {{NYC_TAR_GZ_URL}}
+
+extract-nyc: download-nyc
+    tar -xvf {{NYC_TAR_GZ_FILE}} -C {{DATASETS_DIR}}
