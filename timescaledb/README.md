@@ -116,8 +116,13 @@ You can now proceed with the rest of the [Analytics on energy consumption](https
 
 ### Docker
 - [Install and configure TimescaleDB on PostgreSQL](https://docs.timescale.com/self-hosted/latest/install/installation-docker/)
-- [timescale/timescaledb-docker](https://github.com/timescale/timescaledb-docker)
 - [timescale/timescaledb-docker-ha](https://github.com/timescale/timescaledb-docker-ha)
+    - Based on Ubuntu, provides the [TimescaleDB Toolkit](https://github.com/timescale/timescaledb-toolkit)
+    - Required to follow the tutorials
+- [timescale/timescaledb-docker](https://github.com/timescale/timescaledb-docker)
+    - Based on Alpine Linux
+    - Minimal image
+    - Not suitable to follow the tutorials
 
 ### Integrations
 - [Integrations](https://docs.timescale.com/use-timescale/latest/integrations/)

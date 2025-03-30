@@ -29,7 +29,8 @@ services:
       - grafana-data:/var/lib/grafana
 
   timescaledb:
-    image: timescale/timescaledb:2.18.1-pg17
+    # timescaledb-ha provides the TimescaleDB Toolkit, required to follow the tutorials.
+    image: timescale/timescaledb-ha:pg17
     networks:
       - tsdb
     environment:
@@ -42,5 +43,5 @@ services:
       timeout: 5s
       retries: 5
     volumes:
-      - timescaledb-data:/var/lib/postgresql/data
+      - timescaledb-data:/home/postgres/pgdata/data
       - ./datasets:/datasets:ro
