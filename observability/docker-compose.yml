@@ -72,14 +72,14 @@ services:
       - observability
 
   tempo:
-    image: grafana/tempo:1.5.0
+    image: grafana/tempo:2.9.0
     command: -config.file=/etc/tempo-local.yaml
     networks:
       - observability
     ports:
-      - 3200:3200  # Tempo HTTP API
-      - 4317:4317  # OTEL gRPC API
-      - 4318:4318  # OTEL HTTP API
+      - "3200:3200"  # Tempo HTTP API
+      - "4317:4317"  # OTEL gRPC API
+      - "4318:4318"  # OTEL HTTP API
     volumes:
       - ./docker/tempo/tempo-local.yaml:/etc/tempo-local.yaml:ro
       - tempo-data:/tmp/tempo
