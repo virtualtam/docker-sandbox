@@ -61,10 +61,7 @@ services:
       - prometheus-data:/prometheus
 
   promtail:
-    image: grafana/promtail:1.4.1
-    volumes:
-      - '/var/log:/var/log:ro,rslave'
-    command: -config.file=/etc/promtail/docker-config.yaml
+    image: grafana/promtail:3.5
     networks:
       - observability
 
