@@ -89,23 +89,17 @@ services:
   random-one:
     image: local/go-random
     build: ./go-random
-    environment:
-      LISTEN_PORT: 8081
     networks:
       - apps
 
   random-two:
     image: local/go-random
     build: ./go-random
-    environment:
-      LISTEN_PORT: 8082
     networks:
       - apps
 
   random-three:
     image: local/go-random
     build: ./go-random
-    environment:
-      LISTEN_PORT: 8083
     networks:
       - apps

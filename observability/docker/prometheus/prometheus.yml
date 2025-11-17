@@ -20,9 +20,9 @@ scrape_configs:
 
   - job_name: go-random
     static_configs:
-      - targets: ["random-one:8081", "random-two:8082"]
+      - targets: ["random-one:8080", "random-two:8080"]
         labels:
           group: production
-      - targets: ["random-three:8083"]
+      - targets: ["random-three:8080"]
         labels:
           group: canary

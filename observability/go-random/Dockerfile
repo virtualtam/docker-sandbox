@@ -1,14 +1,16 @@
-FROM golang:1.19-alpine
+FROM golang:1.25-alpine3.22 AS builder
 
-ENV LISTEN_PORT 8080
-ENV CGO_ENABLED 0
+ENV CGO_ENABLED=0
 
-RUN apk add --update --no-cache git \
-    && git clone https://github.com/prometheus/client_golang.git \
-    && cd client_golang/examples/random \
-    && go build \
-    && cp random /usr/local/bin/random
+RUN apk add git
+RUN git clone --depth=1 https://github.com/prometheus/client_golang.git
 
-ADD docker-entrypoint.sh /usr/local/bin/
+WORKDIR /go/client_golang/examples/random
+RUN go build -trimpath
 
-CMD ["docker-entrypoint.sh"]
+FROM scratch
+
+COPY --from=builder /go/client_golang/examples/random/random /random
+
+EXPOSE 8080
+ENTRYPOINT ["/random", "-listen-address", ":8080" ]
