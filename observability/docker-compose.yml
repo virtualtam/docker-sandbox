@@ -43,20 +43,11 @@ services:
       - ./docker/loki/local-config.yaml:/etc/loki/local-config.yaml:ro
 
   node-exporter:
-    image: prom/node-exporter:v1.3.1
+    image: prom/node-exporter:v1.10.2
     networks:
       - observability
-    pid: 'host'
     ports:
-      - 19100:9100
-    cap_add:
-      - SYS_TIME
-    volumes:
-      - "/proc:/host/proc:ro,rslave"
-      - "/sys:/host/sys:ro,rslave"
-    command:
-      - '--path.procfs=/host/proc'
-      - '--path.sysfs=/host/sys'
+      - "19100:9100"
 
   prometheus:
     image: prom/prometheus:v3.7.3
