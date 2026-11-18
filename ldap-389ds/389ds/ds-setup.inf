@@ -1,30 +1,18 @@
-[General]
-AdminDomain = domain.tld
-ConfigDirectoryAdminID = admin
-ConfigDirectoryAdminPwd = admin
-ConfigDirectoryLdapURL = ldap://localhost:389/o=NetscapeRoot
-FullMachineName = localhost
-ServerRoot = /usr/lib64/dirsrv
-SuiteSpotGroup = nobody
-SuiteSpotUserID = nobody
-
-[admin]
-Port = 9830
-ServerAdminID = admin
-ServerAdminPwd = admin
-ServerIpAddress = 0.0.0.0
-SysUser = nobody
+[general]
+full_machine_name = localhost
+start = False
 
 [slapd]
-AddOrgEntries = Yes
-AddSampleEntries = No
-InstallLdifFile = suggest
-RootDN = cn=Directory Manager
-RootDNPwd = password
-ServerIdentifier = dir
-ServerPort = 389
-SlapdConfigForMC = yes
-Suffix = dc=domain,dc=tld
-UseExistingMC = No
+instance_name = dir
+port = 389
+root_dn = cn=Directory Manager
+root_password = password
+self_sign_cert = False
+
+[backend-userroot]
+suffix = dc=domain,dc=tld
+# Populate the directory with 389 DS 1.3.6 (001003006) sample entries
+# https://github.com/389ds/389-ds-base/blob/main/src/lib389/lib389/configurations/__init__.py
+sample_entries = 001003006
 
 # vim:ft=config

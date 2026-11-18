@@ -1,5 +1,5 @@
-LDAP - 389 Directory Service
-============================
+LDAP - 389 Directory Server
+===========================
 
 Usage
 -----
@@ -34,7 +34,7 @@ Create and start the containers:
 
 This will start the following services:
 
-- a 389 Directory Service LDAP directory with pre-configured users (see LDIF
+- a 389 Directory Server LDAP directory with pre-configured users (see LDIF
   files);
 - a phpLDAPadmin web-based LDAP browser to manage LDAP data,
 - a Self-Service Password (SSP) web service for users to reset their password.
@@ -58,17 +58,20 @@ To stop all services:
 Resources
 ---------
 
-389 Directory Service
-~~~~~~~~~~~~~~~~~~~~~
+389 Directory Server
+~~~~~~~~~~~~~~~~~~~~
 
 Documentation:
 
-- https://directory.fedoraproject.org/index.html
-- https://directory.fedoraproject.org/docs/389ds/howto/quickstart.html
-- https://access.redhat.com/documentation/en-us/Red_Hat_Directory_Server/10/
-- https://access.redhat.com/documentation/en-us/red_hat_directory_server/10/html/deployment_guide/index
-- https://access.redhat.com/documentation/en-us/red_hat_directory_server/10/html/installation_guide/index
-- https://access.redhat.com/documentation/en-us/red_hat_directory_server/10/html/administration_guide/index
+- https://www.port389.org/
+- https://github.com/389ds/389-ds-base
+- https://docs.redhat.com/en/documentation/red_hat_directory_server/12
+- https://docs.redhat.com/en/documentation/red_hat_directory_server/12/html/installing_red_hat_directory_server/index
+- https://docs.redhat.com/en/documentation/red_hat_directory_server/12/html/importing_and_exporting_data/index
+
+Sample entries versions:
+
+- https://github.com/389ds/389-ds-base/blob/main/src/lib389/lib389/configurations/__init__.py
 
 phpLDAPadmin
 ~~~~~~~~~~~~

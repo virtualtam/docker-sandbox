@@ -1,0 +1,4 @@
+dn: dc=domain,dc=tld
+changetype: modify
+add: aci
+aci: (targetattr != "userPassword")(version 3.0; acl "Enable anonymous access"; allow (read, search, compare) userdn = "ldap:///anyone";)
