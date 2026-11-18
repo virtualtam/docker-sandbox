@@ -17,8 +17,7 @@ Messing around with container-centric architectures, networking and scaling :)
 
 - [Configuration and Secrets Management](./consul-vault/README.rst): Consul,
   Vault
-- [LDAP](./ldap-389ds/README.rst): 389 Directory Services, phpLDAPadmin,
-  Self-Service Password
+- [LDAP](./ldap-389ds/README.md): 389 Directory Served, phpLDAPadmin, Self-Service Password
 - [Minetest](./minetest/README.rst) game server
 - [OpenResty](./openresty-srcache-redis/README.rst) high-availability web
   server cluster with a shared Redis cache
