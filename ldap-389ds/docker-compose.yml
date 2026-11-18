@@ -13,14 +13,16 @@ services:
       - 389:389
 
   phpldapadmin:
-    image: osixia/phpldapadmin:0.9.0
+    image: phpldapadmin/phpldapadmin:2.3.12
     environment:
-      PHPLDAPADMIN_HTTPS: "false"
-      PHPLDAPADMIN_LDAP_HOSTS: ldap
+      LDAP_HOST: ldap
+      LDAP_LOGIN_ATTR: dn
+      LDAP_LOGIN_ATTR_DESC: DN
+      LDAP_LOGIN_OBJECTCLASS: simpleSecurityObject
     networks:
       ldap:
     ports:
-      - 14080:80
+      - "14080:8080"
 
   self-service-password:
     image: tiredofit/self-service-password:5.1.2

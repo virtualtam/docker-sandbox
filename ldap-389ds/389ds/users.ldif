@@ -28,3 +28,8 @@ objectClass: inetorgperson
 sn: Smith
 cn:: Sm9obiBTbWl0aA==
 userPassword: password7895
+
+dn: cn=Directory Administrators,dc=domain,dc=tld
+changetype: modify
+add: uniqueMember
+uniqueMember: cn=admin,dc=domain,dc=tld
